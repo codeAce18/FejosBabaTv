@@ -1,6 +1,6 @@
 'use client';
 import { useQuery } from '@tanstack/react-query';
-import { Film, Users, Crown, Eye, TrendingUp, Plus } from 'lucide-react';
+import { FilmStrip, Users, Crown, Eye, TrendUp } from '@phosphor-icons/react';
 import { adminApi } from '@/lib/api';
 import { StatCard, Card, Spinner, EmptyState } from '@/components/ui';
 import { formatNumber, formatDate } from '@/lib/utils';
@@ -24,12 +24,12 @@ export default function AdminDashboard() {
       {/* Welcome */}
       <div>
         <h2 className="font-display text-2xl font-bold text-white">Dashboard Overview</h2>
-        <p className="text-ink-secondary text-sm mt-1">Welcome back. Here's what's happening.</p>
+        <p className="text-ink-secondary text-sm mt-1">Welcome back. Here&apos;s what&apos;s happening.</p>
       </div>
 
       {/* Stats grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        <StatCard label="Total Movies" value={stats?.totalMovies ?? 0} icon={<Film size={20} />} />
+        <StatCard label="Total Movies" value={stats?.totalMovies ?? 0} icon={<FilmStrip size={20} />} />
         <StatCard label="Students" value={stats?.totalStudents ?? 0} icon={<Users size={20} />} />
         <StatCard label="Premium Users" value={stats?.totalPremiumUsers ?? 0} icon={<Crown size={20} />} />
         <StatCard label="Total Views" value={formatNumber(stats?.totalViews ?? 0)} icon={<Eye size={20} />} />
@@ -38,10 +38,10 @@ export default function AdminDashboard() {
       {/* Quick Actions */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {[
-          { label: 'Add Movie', href: '/admin/movies', icon: Film, color: 'brand-orange' },
+          { label: 'Add Movie', href: '/admin/movies', icon: FilmStrip, color: 'brand-orange' },
           { label: 'Add Student', href: '/admin/students', icon: Users, color: 'blue-400' },
           { label: 'Add Course', href: '/admin/courses', icon: Crown, color: 'purple-400' },
-          { label: 'Upload Result', href: '/admin/results', icon: TrendingUp, color: 'green-400' },
+          { label: 'Upload Result', href: '/admin/results', icon: TrendUp, color: 'green-400' },
         ].map(({ label, href, icon: Icon, color }) => (
           <Link
             key={label}

@@ -11,7 +11,7 @@ import toast from 'react-hot-toast';
 type AnswerMap = Record<string, 'A' | 'B' | 'C' | 'D'>;
 
 export default function StudentExamsPage() {
-  const [activeExam, setActiveExam] = useState<{ exam: any; questions: Question[] } | null>(null);
+  const [activeExam, setActiveExam] = useState<{ examId: string; exam: any; questions: Question[] } | null>(null);
   const [answers, setAnswers] = useState<AnswerMap>({});
   const [result, setResult] = useState<any>(null);
   const [starting, setStarting] = useState<string | null>(null);
@@ -36,7 +36,8 @@ export default function StudentExamsPage() {
     try {
       const res = await studentApi.startExam(examId);
       const data = res.data.data;
-      setActiveExam({ exam: data, questions: data.questions });
+      if (!data) throw new Error('No exam data returned');
+      setActiveExam({ examId: data.examId, exam: data, questions: data.questions });
       setAnswers({});
       setResult(null);
     } catch (error) {
@@ -56,7 +57,7 @@ export default function StudentExamsPage() {
 
     setSubmitting(true);
     try {
-      const res = await studentApi.submitExam(activeExam.exam.examId, { answers });
+      const res = await studentApi.submitExam(activeExam.examId, { answers });
       setResult(res.data.data);
       setActiveExam(null);
       queryClient.invalidateQueries({ queryKey: ['student-exam-history'] });

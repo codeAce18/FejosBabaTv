@@ -1,5 +1,19 @@
 import axios from 'axios';
-import type { ApiResponse } from './types';
+import type {
+  ApiResponse,
+  Course,
+  DashboardStats,
+  Enrollment,
+  Exam,
+  ExamAttempt,
+  Movie,
+  ProgramRegistration,
+  Question,
+  ResultsData,
+  StreamData,
+  User,
+} from './types';
+import { useAuthStore } from '@/store/authStore';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
@@ -27,8 +41,7 @@ api.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       if (typeof window !== 'undefined') {
-        localStorage.removeItem('fejos_token');
-        localStorage.removeItem('fejos_user');
+        useAuthStore.getState().clearAuth();
         window.location.href = '/login';
       }
     }
@@ -51,10 +64,6 @@ export const getErrorMessage = (error: unknown): string => {
 export const authApi = {
   login: (data: { email: string; password: string }) =>
     api.post<ApiResponse>('/api/auth/login', data),
-
-  registerPremium: (data: {
-    name: string; email: string; password: string; plan: string;
-  }) => api.post<ApiResponse>('/api/auth/register/premium', data),
 
   registerStudent: (data: {
     name: string; email: string; password: string;
@@ -91,9 +100,9 @@ export const paymentApi = {
 // ─────────────────────────────────────
 
 export const moviesApi = {
-  getAll: () => api.get<ApiResponse>('/api/movies'),
-  getById: (id: string) => api.get<ApiResponse>(`/api/movies/${id}`),
-  getStreamUrl: (id: string) => api.get<ApiResponse>(`/api/movies/${id}/stream`),
+  getAll: () => api.get<ApiResponse<Movie[]>>('/api/movies'),
+  getById: (id: string) => api.get<ApiResponse<Movie>>(`/api/movies/${id}`),
+  getStreamUrl: (id: string) => api.get<ApiResponse<StreamData>>(`/api/movies/${id}/stream`),
   trackView: (id: string) => api.post<ApiResponse>(`/api/movies/${id}/view`),
   create: (data: object) => api.post<ApiResponse>('/api/movies', data),
   update: (id: string, data: object) => api.patch<ApiResponse>(`/api/movies/${id}`, data),
@@ -105,16 +114,16 @@ export const moviesApi = {
 // ─────────────────────────────────────
 
 export const adminApi = {
-  getDashboard: () => api.get<ApiResponse>('/api/admin/dashboard'),
+  getDashboard: () => api.get<ApiResponse<DashboardStats>>('/api/admin/dashboard'),
 
   // Students
-  getStudents: () => api.get<ApiResponse>('/api/admin/students'),
+  getStudents: () => api.get<ApiResponse<User[]>>('/api/admin/students'),
   getStudentById: (id: string) => api.get<ApiResponse>(`/api/admin/students/${id}`),
   createStudent: (data: object) => api.post<ApiResponse>('/api/admin/students', data),
   deleteStudent: (id: string) => api.delete<ApiResponse>(`/api/admin/students/${id}`),
 
   // Courses
-  getCourses: () => api.get<ApiResponse>('/api/admin/courses'),
+  getCourses: () => api.get<ApiResponse<Course[]>>('/api/admin/courses'),
   createCourse: (data: object) => api.post<ApiResponse>('/api/admin/courses', data),
   updateCourse: (id: string, data: object) => api.patch<ApiResponse>(`/api/admin/courses/${id}`, data),
   deleteCourse: (id: string) => api.delete<ApiResponse>(`/api/admin/courses/${id}`),
@@ -123,16 +132,28 @@ export const adminApi = {
   uploadResult: (data: object) => api.post<ApiResponse>('/api/admin/results', data),
 
   // Premium
-  getPremiumUsers: () => api.get<ApiResponse>('/api/admin/premium'),
+  getPremiumUsers: () => api.get<ApiResponse<User[]>>('/api/admin/premium'),
   revokePremium: (id: string) => api.patch<ApiResponse>(`/api/admin/premium/${id}/revoke`),
 
   // Exams
-  getExams: () => api.get<ApiResponse>('/api/admin/exams'),
+  getExams: () => api.get<ApiResponse<Exam[]>>('/api/admin/exams'),
   createExam: (data: object) => api.post<ApiResponse>('/api/admin/exams', data),
   addQuestions: (examId: string, data: object) => api.post<ApiResponse>(`/api/admin/exams/${examId}/questions`, data),
   toggleExam: (examId: string) => api.patch<ApiResponse>(`/api/admin/exams/${examId}/toggle`),
   deleteExam: (examId: string) => api.delete<ApiResponse>(`/api/admin/exams/${examId}`),
   getExamResults: (examId: string) => api.get<ApiResponse>(`/api/admin/exams/${examId}/results`),
+
+  // Program registrations
+  getRegistrations: () => api.get<ApiResponse<ProgramRegistration[]>>('/api/admin/registrations'),
+  deleteRegistration: (id: string) => api.delete<ApiResponse>(`/api/admin/registrations/${id}`),
+};
+
+// ─────────────────────────────────────
+// PROGRAM
+// ─────────────────────────────────────
+
+export const programApi = {
+  register: (data: object) => api.post<ApiResponse>('/api/program/register', data),
 };
 
 // ─────────────────────────────────────
@@ -142,13 +163,17 @@ export const adminApi = {
 export const studentApi = {
   getProfile: () => api.get<ApiResponse>('/api/student/profile'),
   updateProfile: (data: object) => api.patch<ApiResponse>('/api/student/profile', data),
-  getCourses: () => api.get<ApiResponse>('/api/student/courses'),
+  getCourses: () => api.get<ApiResponse<Course[]>>('/api/student/courses'),
   registerCourses: (data: object) => api.post<ApiResponse>('/api/student/courses/register', data),
-  getEnrollments: () => api.get<ApiResponse>('/api/student/courses/enrolled'),
-  getResults: (session?: string) => api.get<ApiResponse>(`/api/student/results${session ? `?session=${session}` : ''}`),
-  getExams: () => api.get<ApiResponse>('/api/student/exams'),
-  getExamHistory: () => api.get<ApiResponse>('/api/student/exams/history'),
-  startExam: (examId: string) => api.post<ApiResponse>(`/api/student/exams/${examId}/start`),
+  getEnrollments: () => api.get<ApiResponse<Enrollment[]>>('/api/student/courses/enrolled'),
+  getResults: (session?: string) =>
+    api.get<ApiResponse<ResultsData>>(`/api/student/results${session ? `?session=${session}` : ''}`),
+  getExams: () => api.get<ApiResponse<Exam[]>>('/api/student/exams'),
+  getExamHistory: () => api.get<ApiResponse<ExamAttempt[]>>('/api/student/exams/history'),
+  startExam: (examId: string) =>
+    api.post<ApiResponse<{ examId: string; questions: Question[] } & Record<string, unknown>>>(
+      `/api/student/exams/${examId}/start`
+    ),
   submitExam: (examId: string, data: object) => api.post<ApiResponse>(`/api/student/exams/${examId}/submit`, data),
 };
 

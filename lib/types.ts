@@ -29,19 +29,66 @@ export interface PremiumSubscription {
 }
 
 // ─── Movie ───
+export interface MovieCrew {
+  writtenBy?: string;
+  director?: string;
+  producer?: string;
+  continuity?: string;
+  editor?: string;
+  light?: string;
+  dop?: string;
+  productionManager?: string;
+  sound?: string;
+}
+
 export interface Movie {
   id: string;
   title: string;
   description: string;
   genre: string;
   thumbnail: string;
+  heroImage?: string | null;
   trailerUrl: string;
   fullMovieUrl?: string;
   isPremium: boolean;
   releaseYear?: number;
+  cast?: string[] | null;
+  crew?: MovieCrew | null;
   views: number;
   createdAt: string;
   updatedAt: string;
+}
+
+// ─── Program Registration ───
+export interface ProgramRegistration {
+  id: string;
+  fullName: string;
+  preferredName?: string | null;
+  gender: string;
+  dateOfBirth: string;
+  phone: string;
+  email: string;
+  address: string;
+  state: string;
+  lga: string;
+  occupation: string;
+  church?: string | null;
+  bornAgain: boolean;
+  yearsFollowingChrist?: string | null;
+  baptizedWater?: boolean | null;
+  baptizedHolySpirit?: boolean | null;
+  premFan: boolean;
+  knownFejosDuration?: string | null;
+  whyRegister: string;
+  expectations: string;
+  heardVia: string[];
+  emergencyContact: string;
+  medicalInfo?: string | null;
+  accommodation?: string | null;
+  mediaConsent: boolean;
+  additionalInfo?: string | null;
+  agreedToRules: boolean;
+  createdAt: string;
 }
 
 // ─── Stream ───
@@ -156,9 +203,9 @@ export interface DashboardStats {
   totalPremiumUsers: number;
   totalViews: number;
   recentMovies: Pick<Movie, 'id' | 'title' | 'views' | 'createdAt'>[];
-  recentStudents: Pick<User, 'id' | 'name' | 'email' | 'createdAt'> & {
+  recentStudents: (Pick<User, 'id' | 'name' | 'email' | 'createdAt'> & {
     studentProfile: Pick<StudentProfile, 'admissionNumber' | 'department'> | null;
-  }[];
+  })[];
 }
 
 // ─── API Response ───

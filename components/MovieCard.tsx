@@ -1,8 +1,8 @@
 'use client';
-import Image from 'next/image';
 import Link from 'next/link';
 import { Play, Lock, Eye } from 'lucide-react';
 import { formatNumber } from '@/lib/utils';
+import PosterImage from '@/components/streaming/PosterImage';
 import type { Movie } from '@/lib/types';
 
 interface MovieCardProps {
@@ -17,13 +17,7 @@ export default function MovieCard({ movie, hasAccess = false }: MovieCardProps) 
 
         {/* Thumbnail */}
         <div className="relative aspect-[2/3] overflow-hidden">
-          <Image
-            src={movie.thumbnail}
-            alt={movie.title}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
-          />
+        <PosterImage src={movie.thumbnail} alt={movie.title} variant="card" className="absolute inset-0" />
 
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-cinema-black via-transparent to-transparent opacity-80" />

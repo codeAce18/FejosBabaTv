@@ -140,8 +140,9 @@ export default function PremiumRegisterPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
           {/* ─── LEFT: Benefits ─── */}
-          <div className="bg-navy-gradient border border-brand-navy/50 rounded-2xl p-8 flex flex-col justify-between">
-            <div>
+          <div className="bg-navy-gradient border border-brand-navy/50 rounded-xl p-8 flex flex-col justify-between relative overflow-hidden">
+            <div className="absolute inset-0 film-grain opacity-25 pointer-events-none" />
+            <div className="relative z-10">
               <div className="flex items-center gap-2 mb-2">
                 <Crown size={20} className="text-brand-orange" />
                 <span className="text-brand-orange text-sm font-semibold uppercase tracking-widest">Premium</span>
@@ -183,7 +184,7 @@ export default function PremiumRegisterPage() {
           </div>
 
           {/* ─── RIGHT: Form ─── */}
-          <div className="bg-cinema-surface border border-cinema-border rounded-2xl p-8">
+          <div className="bg-cinema-surface/90 backdrop-blur-sm border border-cinema-border rounded-xl p-8">
             <h3 className="font-display text-xl font-bold text-white mb-6">Create Your Account</h3>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">

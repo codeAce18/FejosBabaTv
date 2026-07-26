@@ -22,7 +22,7 @@ export default function StudentDashboard() {
 
   const { data: examsData } = useQuery({
     queryKey: ['student-exams'],
-    queryFn: () => studentApi.getAvailableExams(),
+    queryFn: () => studentApi.getExams(),
   });
 
   const results = resultsData?.data?.data?.results || [];

@@ -1,26 +1,19 @@
 import type { Metadata } from 'next';
+import { Oswald, Inter } from 'next/font/google';
 import './globals.css';
 import { Toaster } from 'react-hot-toast';
 import Providers from '@/components/Providers';
+import { defaultMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: { default: 'FejosBaba TV', template: '%s | FejosBaba TV' },
-  description: 'Watch premium Nigerian films and series on FejosBaba TV.',
-  keywords: ['Nigerian movies', 'Nollywood', 'film streaming', 'FejosBaba'],
-};
+const oswald = Oswald({ subsets: ['latin'], variable: '--font-display', weight: ['400', '500', '600', '700'] });
+const inter = Inter({ subsets: ['latin'], variable: '--font-body', weight: ['300', '400', '500', '600'] });
+
+export const metadata: Metadata = defaultMetadata;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body>
+      <body className={`${oswald.variable} ${inter.variable} font-body bg-cinema-black text-ink-primary antialiased`}>
         <Providers>
           {children}
           <Toaster

@@ -32,6 +32,7 @@ export const useAuthStore = create<AuthState>()(
       clearAuth: () => {
         localStorage.removeItem('fejos_token');
         localStorage.removeItem('fejos_user');
+        localStorage.removeItem('fejos-auth');
         set({ user: null, token: null });
       },
 
@@ -40,8 +41,15 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: () => !!get().token && !!get().user,
       isAdmin: () => get().user?.role === 'ADMIN',
       isStudent: () => get().user?.role === 'STUDENT',
-      isPremium: () =>
-        get().user?.role === 'PREMIUM' || get().user?.role === 'ADMIN',
+      isPremium: () => {
+        const user = get().user;
+        if (!user) return false;
+        if (user.role === 'ADMIN') return true;
+        if (user.role !== 'PREMIUM') return false;
+        const sub = user.premiumSubscription;
+        if (!sub?.isActive) return false;
+        return new Date() <= new Date(sub.endDate);
+      },
     }),
     {
       name: 'fejos-auth',
