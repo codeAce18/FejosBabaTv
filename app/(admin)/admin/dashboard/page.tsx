@@ -64,7 +64,7 @@ export default function AdminDashboard() {
             <Link href="/admin/movies" className="text-brand-orange text-xs hover:underline">View all</Link>
           </div>
           {!stats?.recentMovies?.length ? (
-            <EmptyState icon={<Film size={24} />} title="No movies yet" />
+            <EmptyState icon={<FilmStrip size={24} />} title="No movies yet" />
           ) : (
             <div className="space-y-3">
               {stats.recentMovies.map((movie) => (
