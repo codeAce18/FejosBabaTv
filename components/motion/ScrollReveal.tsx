@@ -3,12 +3,14 @@
 import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
 
+const EASE_OUT = [0.22, 1, 0.36, 1] as const;
+
 const fadeUp = {
   hidden: { opacity: 0, y: 28 },
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 0.55, delay: i * 0.08, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.55, delay: i * 0.08, ease: EASE_OUT },
   }),
 };
 
@@ -39,7 +41,7 @@ export function PageHero({ children, className }: { children: ReactNode; classNa
       className={className}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.6, ease: EASE_OUT }}
     >
       {children}
     </motion.header>
@@ -69,7 +71,7 @@ export function StaggerItem({ children, className }: { children: ReactNode; clas
       className={className}
       variants={{
         hidden: { opacity: 0, y: 24 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] } },
+        visible: { opacity: 1, y: 0, transition: { duration: 0.45, ease: EASE_OUT } },
       }}
     >
       {children}

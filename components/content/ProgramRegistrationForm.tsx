@@ -36,7 +36,9 @@ const schema = z.object({
   accommodation: z.string().optional(),
   mediaConsent: z.boolean(),
   additionalInfo: z.string().optional(),
-  agreedToRules: z.literal(true, { message: 'You must agree to the rules' }),
+  agreedToRules: z
+    .boolean()
+    .refine((val) => val === true, { message: 'You must agree to the rules' }),
 });
 
 type FormData = z.infer<typeof schema>;
