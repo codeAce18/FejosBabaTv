@@ -11,6 +11,7 @@ export interface StaffMember {
 export const STAFF_MEMBERS: StaffMember[] = [
   {
     slug: 'rebecca-femi-adebile',
+    photo: 'RebeccaFemiAdebile.jpg',
     name: 'Rebecca Femi-Adebile',
     role: 'Board of Trustees',
     joined: 'July 2021',
